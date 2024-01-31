@@ -9,6 +9,7 @@
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "iconv-lite": "^0.6.3",
+    "openai": "^4.26.0",
     "request": "^2.88.2"
   },
   "devDependencies": {

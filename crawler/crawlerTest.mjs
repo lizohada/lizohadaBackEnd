@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { spawn } from "child_process";
+import OpenAI from "openai";
 
 // 네이버 검색 API 예제 - 블로그 검색
 var app = express();
@@ -11,6 +12,22 @@ dotenv.config();
 var client_id = process.env.NAVER_CLIENT_ID;
 var client_secret = process.env.NAVER_CLIENT_SECRECT;
 app.get("/search/blog", function (req, res) {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+  const regions = [
+    "단양군",
+    "제천시",
+    "충주시",
+    "괴산군",
+    "음성군",
+    "진천군",
+    "증평군",
+    "청주시",
+    "보은군",
+    "옥천군",
+    "영동군",
+  ];
+  regions.each();
   var api_url =
     "https://openapi.naver.com/v1/search/blog?display=1&query=" +
     encodeURI(req.query.query); // JSON 결과
@@ -81,15 +98,21 @@ app.get("/search/blog", function (req, res) {
             let $ = cheerio.load(responseData);
             const elementsWithClass = $(".se-component-content");
             // Iterate over the elements and print their text content or other attributes
-            elementsWithClass.each((index, element) => {
+            elementsWithClass.slice(0, 5).each(async (index, element) => {
               const r = $(element).text().replace(/\n/g, "");
-              const result_01 = spawn("python3", ["get_keywords.py", r]);
-              result_01.stdout.on("data", (result) => {
-                console.log(result.toString());
+              const completion = await openai.chat.completions.create({
+                messages: [
+                  { role: "user", content: r + " 위 글에서 명사를 추출해줘" },
+                ],
+                model: "gpt-3.5-turbo",
+                max_tokens: 1000,
               });
-
+              console.log(completion);
+              const gptResponse = completion.choices[0].message.content;
+              console.log("[GPT Response]: ", gptResponse);
               // You can access other attributes like $(element).attr('attributeName')
             });
+            console.log(completion);
           }
           // blogs.push({ link, status: response.status, data: response.data });
         } catch (error) {
