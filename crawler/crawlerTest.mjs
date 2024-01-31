@@ -1,9 +1,12 @@
 import express from "express";
 import request from "request";
+import dotenv from "dotenv";
+
 // 네이버 검색 API 예제 - 블로그 검색
 var app = express();
-var client_id = "D7MLuQtQ09Xa2SLyODOB";
-var client_secret = "Kh4O6m_Nfb";
+dotenv.config();
+var client_id = process.env.NAVER_CLIENT_ID;
+var client_secret = process.env.NAVER_CLIENT_SECRECT;
 app.get("/search/blog", function (req, res) {
   var api_url =
     "https://openapi.naver.com/v1/search/blog?query=" +
