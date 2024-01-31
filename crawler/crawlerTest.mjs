@@ -11,7 +11,7 @@ var client_id = process.env.NAVER_CLIENT_ID;
 var client_secret = process.env.NAVER_CLIENT_SECRECT;
 app.get("/search/blog", function (req, res) {
   var api_url =
-    "https://openapi.naver.com/v1/search/blog?display=100&query=" +
+    "https://openapi.naver.com/v1/search/blog?display=1&query=" +
     encodeURI(req.query.query); // JSON 결과
   //   var api_url = 'https://openapi.naver.com/v1/search/blog.xml?query=' + encodeURI(req.query.query); // XML 결과
 
@@ -65,12 +65,9 @@ app.get("/search/blog", function (req, res) {
 
           if (src && src.includes("/PostView")) {
             src = "https://blog.naver.com" + src;
-            console.log(src);
-            let response = await axios.get(article.url, {
-              responseType: "arraybuffer",
-              responseEncoding: "binary",
-            });
-            console.log(src);
+
+            let response = await axios.get(src);
+            // console.log(response);
             let contentType = response.headers["content-type"];
 
             let charset = contentType.includes("charset=")
@@ -78,14 +75,12 @@ app.get("/search/blog", function (req, res) {
               : "UTF-8";
 
             let responseData = await response.data;
-
-            const content = iconv.decode(responseData, "euc-kr");
-            console.log(data);
-            let $ = cheerio.load(content);
+            // console.log(responseData);
+            let $ = cheerio.load(responseData);
             const elementsWithClass = $(".se-component-content");
             // Iterate over the elements and print their text content or other attributes
             elementsWithClass.each((index, element) => {
-              console.log(iconv.decode($(element).text(), charset));
+              console.log($(element).text());
               // You can access other attributes like $(element).attr('attributeName')
             });
           }
