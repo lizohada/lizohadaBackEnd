@@ -3,6 +3,7 @@ import request from "request";
 import dotenv from "dotenv";
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { spawn } from "child_process";
 
 // 네이버 검색 API 예제 - 블로그 검색
 var app = express();
@@ -22,6 +23,7 @@ app.get("/search/blog", function (req, res) {
       "X-Naver-Client-Secret": client_secret,
     },
   };
+
   function naverSearch(options) {
     return new Promise((resolve, reject) => {
       request.get(options, function (error, response, body) {
@@ -80,7 +82,12 @@ app.get("/search/blog", function (req, res) {
             const elementsWithClass = $(".se-component-content");
             // Iterate over the elements and print their text content or other attributes
             elementsWithClass.each((index, element) => {
-              console.log($(element).text());
+              const r = $(element).text().replace(/\n/g, "");
+              const result_01 = spawn("python3", ["get_keywords.py", r]);
+              result_01.stdout.on("data", (result) => {
+                console.log(result.toString());
+              });
+
               // You can access other attributes like $(element).attr('attributeName')
             });
           }
