@@ -2,7 +2,7 @@ import express from "express";
 import request from "request";
 import dotenv from "dotenv";
 import axios from "axios";
-import puppeter from "puppeter";
+import * as cheerio from "cheerio";
 
 // 네이버 검색 API 예제 - 블로그 검색
 var app = express();
@@ -51,20 +51,45 @@ app.get("/search/blog", function (req, res) {
       // Send the results as JSON response
       // Array to store the results of HTTP GET requests
       const blogs = [];
-      const browser = await puppeteer.launch({
-        headless: false,
-        executablePath:
-          "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-      });
 
       async function fetchData(link) {
         try {
-          const page = await browser.newPage();
-          await page.goto(link);
-          console.log(link);
           const response = await axios.get(link);
-          console.log(response);
-          blogs.push({ link, status: response.status, data: response.data });
+
+          // console.log(response);
+          // iframe 태그를 선택합니다.
+
+          const $ = cheerio.load(response.data);
+          const iframe = $("iframe");
+          var src = iframe.attr("src");
+
+          if (src && src.includes("/PostView")) {
+            src = "https://blog.naver.com" + src;
+            console.log(src);
+            let response = await axios.get(article.url, {
+              responseType: "arraybuffer",
+              responseEncoding: "binary",
+            });
+            console.log(src);
+            let contentType = response.headers["content-type"];
+
+            let charset = contentType.includes("charset=")
+              ? contentType.split("charset=")[1]
+              : "UTF-8";
+
+            let responseData = await response.data;
+
+            const content = iconv.decode(responseData, "euc-kr");
+            console.log(data);
+            let $ = cheerio.load(content);
+            const elementsWithClass = $(".se-component-content");
+            // Iterate over the elements and print their text content or other attributes
+            elementsWithClass.each((index, element) => {
+              console.log(iconv.decode($(element).text(), charset));
+              // You can access other attributes like $(element).attr('attributeName')
+            });
+          }
+          // blogs.push({ link, status: response.status, data: response.data });
         } catch (error) {
           blogs.push({
             link,
