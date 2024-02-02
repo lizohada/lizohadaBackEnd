@@ -16,7 +16,7 @@ provider:
 
 functions:
   postMessage:
-    handler: ./postBlog/crawler.handler
+    handler: <<람다 핸들러 위치>>
     url:
       cors: true
     timeout: 900
