@@ -2,7 +2,8 @@ import axios from "axios";
 import cheerio from "cheerio";
 import fs from "fs/promises";
 import { blogScraper } from "./blogScraper.js";
-
+import { blogDetailScraper } from "./blogDetailScraper.mjs";
+import { ADDRGETNETWORKPARAMS } from "dns";
 export const handler = async (event, context) => {
   const body = event;
   console.log("[From Client]: ", body);
@@ -19,7 +20,12 @@ export const handler = async (event, context) => {
     return { statusCode: 400, body: "No content provided" };
   }
 
-  let blogs = await blogScraper("충주 여행");
+  let blogs = await blogScraper("충주 여행", 5);
+  blogs = await Promise.all(
+    blogs.map(async (blog) => {
+      return await blogDetailScraper(blog);
+    })
+  );
 
   // var cupangUrl = `https://www.coupang.com/np/search?component=&q=${encodeURI(
   //   inputData.q
