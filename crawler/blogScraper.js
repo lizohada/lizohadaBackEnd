@@ -8,11 +8,11 @@ const axios = require("axios");
 var client_id = process.env.NAVER_CLIENT_ID;
 var client_secret = process.env.NAVER_CLIENT_SECRECT;
 
-async function blogScraper(region) {
+async function blogScraper(keyword, count) {
   try {
-    var api_url =
-      "https://openapi.naver.com/v1/search/blog?display=100&sort=date&query=" +
-      encodeURI(region);
+    var api_url = `https://openapi.naver.com/v1/search/blog?display=${count}&sort=date&query=\"${encodeURIComponent(
+      keyword
+    )}\"`;
 
     let blogsResponse = await axios({
       url: api_url,
