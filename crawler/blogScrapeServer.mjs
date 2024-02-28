@@ -1,11 +1,7 @@
 import axios from "axios";
 import cheerio from "cheerio";
 import fs from "fs/promises";
-
-function removeParentheses(str) {
-  // 정규식을 사용하여 맨 앞과 맨 뒤의 괄호를 제거합니다.
-  return str.replace(/^[\(\)]+|[\(\)]+$/g, "");
-}
+import { blogScraper } from "./blogScraper.js";
 
 export const handler = async (event, context) => {
   const body = event;
@@ -23,6 +19,8 @@ export const handler = async (event, context) => {
     return { statusCode: 400, body: "No content provided" };
   }
 
+  let blogs = await blogScraper("충주 여행");
+
   // var cupangUrl = `https://www.coupang.com/np/search?component=&q=${encodeURI(
   //   inputData.q
   // )}&channel=user`;
@@ -34,9 +32,9 @@ export const handler = async (event, context) => {
 
   // var $ = cheerio.load(response.data);
 
-  const parrotResponse = "안녕하세요. 무엇을 도와드릴까요?";
+  // const parrotResponse = "안녕하세요. 무엇을 도와드릴까요?";
   return {
     statusCode: 200,
-    body: JSON.stringify(parrotResponse),
+    body: JSON.stringify(blogs),
   };
 };
