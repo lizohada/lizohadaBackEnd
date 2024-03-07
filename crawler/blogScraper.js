@@ -27,11 +27,6 @@ async function blogScraper(keyword, count) {
 
     if (blogsResponse.status == 200) {
       result = blogsResponse.data.items.map(function (item) {
-        console.log({
-          title: item.title,
-          link: item.link,
-          postdate: item.postdate,
-        });
         return {
           title: item.title,
           link: item.link,
