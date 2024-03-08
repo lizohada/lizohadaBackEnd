@@ -1,6 +1,6 @@
 import { blogScraper } from "./common/blogScraper.js";
 import { blogDetailScraper } from "./common/blogDetailScraper.mjs";
-import { fs } from "fs";
+import fs from "fs";
 /**
  * event = {
  *  keyword : "울릉 여행",
@@ -38,11 +38,11 @@ export const handler = async (event, context) => {
     })
   );
 
-  const filePath = "./file.json";
+  const filePath = `./results/${body.keyword}.json`;
 
   fs.writeFileSync(filePath, JSON.stringify(blogs, null, 2), "utf-8");
   return {
     statusCode: 200,
-    body: JSON.stringify(blogs),
+    body: JSON.stringify(body.keyword + " 스크랩핑 끝"),
   };
 };
