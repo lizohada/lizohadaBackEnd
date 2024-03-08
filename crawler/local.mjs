@@ -40,15 +40,22 @@ const context = {};
 // JSON 형태로 변환
 const result = regionNames.map((name) => ({
   keyword: `${name} 여행`,
-  count: "1",
+  count: "100",
 }));
-let cnt = 0;
-for (const event of result) {
-  await handler(event, context)
-    .then((result) => console.log(result))
-    .catch((error) => console.error(error));
-  cnt++;
-  if (cnt > 3) {
-    break;
+// let cnt = 0;
+async function go() {
+  for (const event of result) {
+    await handler(event, context)
+      .then((result) => console.log(result))
+      .catch((error) => console.error(error));
+    await delay(10000);
+    // cnt++;
+    // if (cnt > 3) {
+    //   break;
+    // }
   }
+}
+go();
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
