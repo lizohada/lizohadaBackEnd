@@ -26,15 +26,10 @@ export const handler = async (event, context) => {
   }
   let blogs = await blogScraper(body.keyword, body.count);
   // map은 함수 콜을 하고 그 결과를 기다리고 다음 콜한다. 100개 스크랩에 -> 37초
-  // blogs = await Promise.all(
-  //   blogs.map((blog) => {
-  //     return blogDetailScraper(blog);
-  //   })
-  // );
-  // map은 각 함수 콜을 하고 100개 스크랩에 -> 21초
+  // 매우 느린 방법이지만, 하나씩 하기에 막히진 않는다.
   blogs = await Promise.all(
-    blogs.map(async (blog) => {
-      return await blogDetailScraper(blog);
+    blogs.map((blog) => {
+      return blogDetailScraper(blog);
     })
   );
 
