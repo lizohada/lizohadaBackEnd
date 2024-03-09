@@ -37,6 +37,6 @@ export async function blogDetailScraper(blog) {
     return blog;
     // blogs.push({ link, status: response.status, data: response.data });
   } catch (error) {
-    console.error("[Blog Detail Get Error]:", error);
+    console.error("[Blog Detail Get Error]:", error.message);
   }
 }

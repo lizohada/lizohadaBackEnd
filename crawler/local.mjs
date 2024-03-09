@@ -3,7 +3,7 @@ import { handler } from "./index.mjs";
 const regionNames = [
   "강릉",
   "동해",
-  "삼척",
+  // "삼척",
   "속초",
   "원주",
   "춘천",
@@ -40,7 +40,7 @@ const context = {};
 // JSON 형태로 변환
 const result = regionNames.map((name) => ({
   keyword: `${name} 여행`,
-  count: "100",
+  count: 100,
 }));
 // let cnt = 0;
 async function go() {
