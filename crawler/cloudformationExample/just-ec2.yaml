@@ -11,8 +11,8 @@ Resources:
       AvailabilityZone: ap-northeast-2a
       ImageId: ami-081a36454cdf357cb
       InstanceType: t2.micro
-      SecurityGroups:
-        - !Ref EC22DynamoDB
+      SecurityGroupIds: # 직접 SG id를 입력
+        - sg-0158b89344019028c
       Tags:
         - Key: team
           Value: lizohada
