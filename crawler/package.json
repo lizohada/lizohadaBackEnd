@@ -4,6 +4,7 @@
   "requires": true,
   "packages": {},
   "dependencies": {
+    "aws-sdk": "^2.1575.0",
     "aws-xray-sdk": "^3.5.4",
     "axios": "^1.6.7",
     "cheerio": "^1.0.0-rc.12",
