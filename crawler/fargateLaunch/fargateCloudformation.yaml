@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  ECSCluster:
+    Type: "AWS::ECS::Cluster" # ECS 클러스터 생성
+    Properties:
+      ClusterName: CFNCluster # ECS 클러스터 이름 지정
+  ECSTaskDefinition:
+    Type: "AWS::ECS::TaskDefinition" # ECS Task 정의
+    Properties:
+      ContainerDefinitions:
+        - Command: # 웹 페이지 보여주는 명령어
+            - >-
+              /bin/sh -c "echo '<html> <head> <title>Amazon ECS Sample
+              App</title> <style>body {margin-top: 40px; background-color:
+              #333;} </style> </head><body> <div
+              style=color:white;text-align:center> <h1>Amazon ECS Sample
+              App</h1> <h2>Congratulations!</h2> <p>Your application is now
+              running on a container in Amazon ECS.</p> </div></body></html>' > 
+              /usr/local/apache2/htdocs/index.html && httpd-foreground"
+          EntryPoint:
+            - sh
+            - "-c"
+          Essential: true
+          Image: "httpd:2.4" # docker 이미지 from docker hub
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: /ecs/fargate-task-definition
+              awslogs-region: ap-northeast-2b # 로그가 저장될 AZ
+              awslogs-stream-prefix: ecs
+          Name: sample-fargate-app
+          PortMappings:
+            - ContainerPort: 80
+              HostPort: 80
+              Protocol: tcp
+      Cpu: 256
+      ExecutionRoleArn: "arn:aws:iam::533267434404:role/ecsTaskExecutionRole" # ECS task role
+      Family: task-definition-cfn
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities: # 실행 형태
+        - FARGATE
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+  ECSService:
+    Type: "AWS::ECS::Service" # ECS 서비스 생성
+    Properties:
+      ServiceName: cfn-service
+      Cluster: !Ref ECSCluster # ECS 클러스터 지정
+      DesiredCount: 1
+      LaunchType: FARGATE # 실행 형태
+      NetworkConfiguration: # 네트워크 형태, SG와 Subnet이 동일한 VPC에 위치해야한다.
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - sg-0e9b28ff251da1771
+          Subnets:
+            - subnet-0f0fa6e8dda45d92d
+      TaskDefinition: !Ref ECSTaskDefinition # ECS Task 정의 지정
