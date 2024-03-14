@@ -12,10 +12,7 @@ Resources:
       ImageId: ami-081a36454cdf357cb
       InstanceType: t2.micro
       SecurityGroupIds: # 직접 SG id를 입력
-        - sg-0158b89344019028c
-      SecurityGroups:
-        - !Ref SSHSecurityGroup
-        - !Ref HTTPSecurityGroup
+        - !Ref ServerSecurityGroup
       Tags:
         - Key: team
           Value: lizohada
@@ -26,34 +23,27 @@ Resources:
     Properties:
       InstanceId: !Ref MyEC2Instance
 
-  # our EC2 security group
-  SSHSecurityGroup:
+  # our second EC2 security group to http
+  ServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable SSH access via port 22
-      SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
-          FromPort: 22
-          IpProtocol: tcp
-          ToPort: 22
-      SecurityGroupEgress:
-        - CidrIp: 0.0.0.0/0
-          FromPort: 22
-          IpProtocol: tcp
-          ToPort: 22
-  # our EC2 security group
-  HTTPSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      # VpcId: 이건 꼭 필요함
-      GroupDescription: Enable HTTP access via port 80
+      VpcId: vpc-01b038b9d6b0cdee4
+      GroupDescription: !Ref SecurityGroupDescription
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
           CidrIp: 0.0.0.0/0
