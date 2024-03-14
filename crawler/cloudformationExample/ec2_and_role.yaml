@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters: # 실행시 parameter를 입력하도록함
+  SecurityGroupDescription:
+    Description: EC2 can connect DynamoDB
+    Type: String
+
+Resources:
+  EC2DynamoDBAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: dynamodb:*
+            Effect: Allow
+            Resource: arn:aws:dynamodb:ap-northeast-2:533267434404:table/keyword_blog_contents
+          - Action: dynamodb:*
+            Effect: Allow
+            Resource: arn:aws:dynamodb:ap-northeast-2:533267434404:table/regionAndKeywords
+      Path: "/"
+
+  MyEC2InstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: "/"
+      Roles: !Ref EC2DynamoDBAccessRole
+
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: ap-northeast-2a
+      ImageId: ami-081a36454cdf357cb
+      InstanceType: t2.micro
+      IamInstanceProfile: !Ref MyEC2InstanceProfile
+      SecurityGroupIds: # 직접 SG id를 입력
+        - sg-0158b89344019028c
+      SecurityGroups:
+        - !Ref SSHSecurityGroup
+        - !Ref HTTPSecurityGroup
+      Tags:
+        - Key: team
+          Value: lizohada
+
+  # an elastic IP for our instance
+  MyEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref MyEC2Instance
+
+  # our EC2 security group
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: vpc-01b038b9d6b0cdee4
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+  # our EC2 security group
+  HTTPSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: vpc-01b038b9d6b0cdee4
+      GroupDescription: Enable HTTP access via port 80
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
