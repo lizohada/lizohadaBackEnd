@@ -13,6 +13,9 @@ Resources:
       InstanceType: t2.micro
       SecurityGroupIds: # 직접 SG id를 입력
         - sg-0158b89344019028c
+      SecurityGroups:
+        - !Ref SSHSecurityGroup
+        - !Ref HTTPSecurityGroup
       Tags:
         - Key: team
           Value: lizohada
@@ -33,29 +36,24 @@ Resources:
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
-
-  # our second EC2 security group to http
-  ServerSecurityGroup:
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+  # our EC2 security group
+  HTTPSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Ref SecurityGroupDescription
+      # VpcId: 이건 꼭 필요함
+      GroupDescription: Enable HTTP access via port 80
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
         - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 192.168.1.1/32
-
-  # our third SG to DynamoDB
-  DBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Enable Connect to DynamoDB
-      SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
-          FromPort: 22
-          IpProtocol: tcp
-          ToPort: 22
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
