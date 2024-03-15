@@ -34,10 +34,12 @@ aws에서 만든 압축 라이브러리 `npm install aws-xray-sdk --save` 를 �
 
 ## 프로젝트 주요 기능
 
-### 블로그 글 스크랩핑 (Blog Scrape) 
+### 블로그 글 스크랩핑 (/Lambda/Blog Scrape) 
 
-### 키워드 추출 (Keyword Extraction)
+### 키워드 추출 (/EC2/Keyword Extraction)
 
-### 모델 학습 (Keyword Learning)
+[AWS DynamoDB python SDK 사용법](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/dynamodb.html)을 참고해서 간단한 FastAPI와 DynamoDB를 연동하는 예제를 작성했다.
 
-### 유저 취향 추론 (Preference Inference)
+### 모델 학습 (/EC2/Keyword Learning)
+
+### 유저 취향 추론 (/EC2/Preference Inference)
