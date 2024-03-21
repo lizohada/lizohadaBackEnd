@@ -45,6 +45,14 @@ def train_model():
     return model
 
 def save_model_params(model):
-    model.save('n-100-1.bin')  # 모델 로컬에 저장
+    # 모델 로컬에 저장
+    file_name = 'n-100-1.bin'
+    model.save(file_name)
 
-# TODO 모델 파일 s3에 저장하기
+    # s3에 저장
+    s3 = boto3.resource('s3')
+    bucket_name = 'cf-templates-xj3puq8bydzt-ap-northeast-2'
+    local_file_path = file_name
+    s3_object_key = file_name
+
+    s3.meta.client.upload_file(local_file_path, bucket_name, s3_object_key)
