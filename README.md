@@ -58,6 +58,7 @@ aws에서 만든 압축 라이브러리 `npm install aws-xray-sdk --save` 를 �
 ### 블로그 글 스크랩핑 (/Lambda/Blog Scrape) 
 
 ### 키워드 추출 (/EC2/Keyword Extraction)
+TextRank 알고리즘을 사용하여 지역별 블로그 글 기반으로 상위 20개 단어를 키워드로 추출
 
 [AWS DynamoDB python SDK 사용법](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/dynamodb.html)을 참고해서 간단한 FastAPI와 DynamoDB를 연동하는 예제를 작성한다.
 
