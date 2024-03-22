@@ -5,6 +5,7 @@ from tqdm.auto import tqdm
 from gensim.models import Word2Vec
 
 import boto3
+import os
 
 def remove_newline(text):
     return text.replace('\n', '')
@@ -46,7 +47,7 @@ def train_model():
 
 def save_model_params(model):
     # 모델 로컬에 저장
-    file_name = 'n-100-1.bin'
+    file_name = 'model.bin'
     model.save(file_name)
 
     # s3에 저장
@@ -56,3 +57,5 @@ def save_model_params(model):
     s3_object_key = file_name
 
     s3.meta.client.upload_file(local_file_path, bucket_name, s3_object_key)
+
+    os.remove(file_name)
