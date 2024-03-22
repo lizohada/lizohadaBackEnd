@@ -1,9 +1,18 @@
 from gensim.models import Word2Vec
 import boto3
+import os
 
 def load_model():
-    # TODO s3에서 모델 load
-    model = Word2Vec.load('n-100-1.bin') # 모델 load
+    file_name = 'model.bin'
+
+    s3 = boto3.resource('s3')
+    bucket_name = 'cf-templates-xj3puq8bydzt-ap-northeast-2'
+    local_file_path = file_name
+    s3_object_key = file_name
+    s3.meta.client.download_file(bucket_name, s3_object_key, local_file_path)
+
+    model = Word2Vec.load(file_name) # 모델 load
+    os.remove(file_name)
     return model
 
 def get_items_from_db(table_name:str):
@@ -28,8 +37,10 @@ def get_keywords_by_region(items):
     return keywords_by_region
 
 def inference(model, user_inputs, keywords_by_region: dict):
+    # TODO 알고리즘 최적화
     max_score = 0
     recommended_region = None
+    # 지역 수 * 지역 당 키워드 수 * 유저 인풋 수
     for region, keywords in keywords_by_region.items():
         score = 0
         for keyword in keywords:
