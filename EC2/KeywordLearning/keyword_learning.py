@@ -7,12 +7,21 @@ from gensim.models import Word2Vec
 import boto3
 import os
 
+from dotenv import load_dotenv
+
+# load .env
+load_dotenv()
+
+FILE_NAME = os.environ.get('MODEL_FILE_NAME')
+BUCKET_NAME = os.environ.get('BUCKET_NAME')
+TABLE_NAME = os.environ.get('REVIEW_TABLE_NAME')
+
 def remove_newline(text):
     return text.replace('\n', '')
 
 def get_review_data():
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('keyword_blog_contents') # 스크랩한 블로그 글
+    table = dynamodb.Table(TABLE_NAME) # 스크랩한 블로그 글
     response = table.scan()
     items = response["Items"]
     contexts = [item["content"] for item in items]
@@ -47,15 +56,16 @@ def train_model():
 
 def save_model_params(model):
     # 모델 로컬에 저장
-    file_name = 'model.bin'
-    model.save(file_name)
+    model.save(FILE_NAME)
 
     # s3에 저장
     s3 = boto3.resource('s3')
-    bucket_name = 'cf-templates-xj3puq8bydzt-ap-northeast-2'
-    local_file_path = file_name
-    s3_object_key = file_name
+    local_file_path = FILE_NAME
+    s3_object_key = FILE_NAME
 
-    s3.meta.client.upload_file(local_file_path, bucket_name, s3_object_key)
+    s3.meta.client.upload_file(local_file_path, BUCKET_NAME, s3_object_key)
 
-    os.remove(file_name)
+    os.remove(FILE_NAME)
+
+model = train_model()
+save_model_params(model)
