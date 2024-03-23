@@ -1,18 +1,23 @@
 from gensim.models import Word2Vec
 import boto3
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+FILE_NAME = os.environ.get('MODEL_FILE_NAME')
+BUCKET_NAME = os.environ.get('BUCKET_NAME')
+TABLE_NAME = os.environ.get('KEYWORD_TABLE_NAME')
 
 def load_model():
-    file_name = 'model.bin'
 
     s3 = boto3.resource('s3')
-    bucket_name = 'cf-templates-xj3puq8bydzt-ap-northeast-2'
-    local_file_path = file_name
-    s3_object_key = file_name
-    s3.meta.client.download_file(bucket_name, s3_object_key, local_file_path)
+    local_file_path = FILE_NAME
+    s3_object_key = FILE_NAME
+    s3.meta.client.download_file(BUCKET_NAME, s3_object_key, local_file_path)
 
-    model = Word2Vec.load(file_name) # 모델 load
-    os.remove(file_name)
+    model = Word2Vec.load(FILE_NAME) # 모델 load
+    os.remove(FILE_NAME)
     return model
 
 def get_items_from_db(table_name:str):
@@ -57,7 +62,7 @@ def inference(model, user_inputs, keywords_by_region: dict):
 
 def get_recommended_region(user_inputs):
     model = load_model()
-    items = get_items_from_db('regionAndKeywords')
+    items = get_items_from_db(TABLE_NAME)
     keywords_by_region = get_keywords_by_region(items)
 
     recommended_region = inference(model, user_inputs, keywords_by_region)
