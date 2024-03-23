@@ -60,8 +60,7 @@ def inference(model, user_inputs, keywords_by_region: dict):
             recommended_region = region
     return recommended_region
 
-def get_recommended_region(user_inputs):
-    model = load_model()
+def get_recommended_region(model, user_inputs):
     items = get_items_from_db(TABLE_NAME)
     keywords_by_region = get_keywords_by_region(items)
 
@@ -70,4 +69,5 @@ def get_recommended_region(user_inputs):
 
 # 예시
 user_inputs = ["바다", "힐링", "가족", "맛집", "밥"]
-print(get_recommended_region(user_inputs))
+model = load_model()
+print(get_recommended_region(model, user_inputs))
