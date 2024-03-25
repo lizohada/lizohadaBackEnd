@@ -10,7 +10,6 @@ BUCKET_NAME = os.environ.get('BUCKET_NAME')
 TABLE_NAME = os.environ.get('KEYWORD_TABLE_NAME')
 
 def load_model():
-
     s3 = boto3.resource('s3')
     local_file_path = FILE_NAME
     s3_object_key = FILE_NAME
@@ -42,7 +41,6 @@ def get_keywords_by_region(items):
     return keywords_by_region
 
 def inference(model, user_inputs, keywords_by_region: dict):
-    # TODO 알고리즘 최적화
     max_score = 0
     recommended_region = None
     # 지역 수 * 지역 당 키워드 수 * 유저 인풋 수

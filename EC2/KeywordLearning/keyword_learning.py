@@ -9,7 +9,6 @@ import os
 
 from dotenv import load_dotenv
 
-# load .env
 load_dotenv()
 
 FILE_NAME = os.environ.get('MODEL_FILE_NAME')
