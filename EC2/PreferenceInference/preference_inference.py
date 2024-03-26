@@ -1,9 +1,22 @@
 from gensim.models import Word2Vec
 import boto3
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+FILE_NAME = os.environ.get('MODEL_FILE_NAME')
+BUCKET_NAME = os.environ.get('BUCKET_NAME')
+TABLE_NAME = os.environ.get('KEYWORD_TABLE_NAME')
 
 def load_model():
-    # TODO s3에서 모델 load
-    model = Word2Vec.load('n-100-1.bin') # 모델 load
+    s3 = boto3.resource('s3')
+    local_file_path = FILE_NAME
+    s3_object_key = FILE_NAME
+    s3.meta.client.download_file(BUCKET_NAME, s3_object_key, local_file_path)
+
+    model = Word2Vec.load(FILE_NAME) # 모델 load
+    os.remove(FILE_NAME)
     return model
 
 def get_items_from_db(table_name:str):
@@ -30,6 +43,7 @@ def get_keywords_by_region(items):
 def inference(model, user_inputs, keywords_by_region: dict):
     max_score = 0
     recommended_region = None
+    # 지역 수 * 지역 당 키워드 수 * 유저 인풋 수
     for region, keywords in keywords_by_region.items():
         score = 0
         for keyword in keywords:
@@ -44,9 +58,8 @@ def inference(model, user_inputs, keywords_by_region: dict):
             recommended_region = region
     return recommended_region
 
-def get_recommended_region(user_inputs):
-    model = load_model()
-    items = get_items_from_db('regionAndKeywords')
+def get_recommended_region(model, user_inputs):
+    items = get_items_from_db(TABLE_NAME)
     keywords_by_region = get_keywords_by_region(items)
 
     recommended_region = inference(model, user_inputs, keywords_by_region)
@@ -54,4 +67,5 @@ def get_recommended_region(user_inputs):
 
 # 예시
 user_inputs = ["바다", "힐링", "가족", "맛집", "밥"]
-print(get_recommended_region(user_inputs))
+model = load_model()
+print(get_recommended_region(model, user_inputs))

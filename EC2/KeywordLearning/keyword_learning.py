@@ -5,13 +5,22 @@ from tqdm.auto import tqdm
 from gensim.models import Word2Vec
 
 import boto3
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+FILE_NAME = os.environ.get('MODEL_FILE_NAME')
+BUCKET_NAME = os.environ.get('BUCKET_NAME')
+TABLE_NAME = os.environ.get('REVIEW_TABLE_NAME')
 
 def remove_newline(text):
     return text.replace('\n', '')
 
 def get_review_data():
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('keyword_blog_contents') # 스크랩한 블로그 글
+    table = dynamodb.Table(TABLE_NAME) # 스크랩한 블로그 글
     response = table.scan()
     items = response["Items"]
     contexts = [item["content"] for item in items]
@@ -45,6 +54,17 @@ def train_model():
     return model
 
 def save_model_params(model):
-    model.save('n-100-1.bin')  # 모델 로컬에 저장
+    # 모델 로컬에 저장
+    model.save(FILE_NAME)
 
-# TODO 모델 파일 s3에 저장하기
+    # s3에 저장
+    s3 = boto3.resource('s3')
+    local_file_path = FILE_NAME
+    s3_object_key = FILE_NAME
+
+    s3.meta.client.upload_file(local_file_path, BUCKET_NAME, s3_object_key)
+
+    os.remove(FILE_NAME)
+
+model = train_model()
+save_model_params(model)
