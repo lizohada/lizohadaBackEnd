@@ -1,14 +1,5 @@
 # 일조하다 백엔드 개발
 
-## API 명세서
-
-| Name | HTTP Method | URI | 예시 | 설명 |
-| --- | --- | --- | --- | --- |
-| getQuery | `get`  | /keyword/query | /keyword/query | 클라이언트에게 질문 키워드 전달 |
-| recommendRegion | `get` | /model/keywords?key={keyword} | /model/keywords?key="바다"&key="힐링"&key="가족"&key="맛집"&key="밥” | 클라이언트가 선택한 키워드를 받아서 여행지 추천 |
-| trainModel | `post`  | /model/params | /model/params | EC2의 추론에서 사용하는 모델 재학습 |
-| getKeywords | `get` | /keyword/{region} | /keyword/전주 | region에 속한 키워드 가져오기 |
-
 ## AWS 설정하기
 
 **로그인 주소**
@@ -74,3 +65,35 @@ TextRank 알고리즘을 사용하여 지역별 블로그 글 기반으로 상�
 ### 모델 학습 (/EC2/Keyword Learning)
 
 ### 유저 취향 추론 (/EC2/Preference Inference)
+
+## API 명세서
+
+| Name | HTTP Method | URI | 예시 | 설명 |
+| --- | --- | --- | --- | --- |
+| getQuery | get  | /keyword/query | /keyword/query | 클라이언트에게 질문 키워드 전달 |
+| recommendRegion | get | /model/keywords?key={keyword} | /model/keywords?key="바다"&key="힐링"&key="가족"&key="맛집"&key="밥” | 클라이언트가 선택한 키워드를 받아서 여행지 추천 |
+| trainModel | post  | /model/params | /model/params | EC2의 추론에서 사용하는 모델 재학습 |
+
+```java
+// getQuery Response 형태
+{
+  "query" : [
+	  ["바다", "밥"],
+	  ["오름", "산"],
+	  ["박물과", "해변"],
+	  ["소나무", "서핑"],
+	  ["배", "턱걸이"],
+	  ["딸기축제", "낙엽"]
+  ]
+}
+
+// recommendRegion Response 형태
+{
+  "region" : "전주"
+}
+
+// recommendRegion Response 형태
+{
+  "region" : "전주"
+}
+```
