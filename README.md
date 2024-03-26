@@ -1,5 +1,19 @@
 # 일조하다 백엔드 개발
 
+## AWS 설정하기
+
+**로그인 주소**
+https://533267434404.signin.aws.amazon.com/console
+
+**사용자 이름**
+lizo1
+
+비밀번호는 알아서 작성
+
+## AWS CLI 설정
+
+로컬 컴퓨터에 `aws configure`를 통해 액세스 키와 시크릿 키 작성
+
 ## 인프라 배포 방법
 
 현재 CICD를 완전히 구축하진 못한 상황이다. 하지만, 앞으로 CICD를 구축하기 위해 지속적인 노력을 할 것이며 일단은 AWS 콘솔을 이용해야한다.
@@ -32,12 +46,22 @@ aws에서 만든 압축 라이브러리 `npm install aws-xray-sdk --save` 를 �
 2. aws cloudformation 콘솔로 이동
 3. 해당 파일을 통해 LizohadaStack을 업데이트 
 
+### 로컬에서 FastAPI 서버 실행시키는 방법
+
+1. `/EC2/requirements.txt`에 정의된 의존성을 설치 `pip install -r reuqirements.txt`
+2. `python -m uvicorn main:app --reload` 이나 `uvicorn main:app --reload` 으로 FastAPI 서버 실행
+
+추가적으로 FastAPI에서 사용하는 라이브러리가 있다면 `requirements.txt`에 작성하기
+
 ## 프로젝트 주요 기능
 
-### 블로그 글 스크랩핑 (Blog Scrape) 
+### 블로그 글 스크랩핑 (/Lambda/Blog Scrape) 
 
-### 키워드 추출 (Keyword Extraction)
+### 키워드 추출 (/EC2/Keyword Extraction)
+TextRank 알고리즘을 사용하여 지역별 블로그 글 기반으로 상위 20개 단어를 키워드로 추출
 
-### 모델 학습 (Keyword Learning)
+[AWS DynamoDB python SDK 사용법](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/dynamodb.html)을 참고해서 간단한 FastAPI와 DynamoDB를 연동하는 예제를 작성한다.
 
-### 유저 취향 추론 (Preference Inference)
+### 모델 학습 (/EC2/Keyword Learning)
+
+### 유저 취향 추론 (/EC2/Preference Inference)
