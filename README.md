@@ -1,5 +1,14 @@
 # 일조하다 백엔드 개발
 
+## API 명세서
+
+| Name | HTTP Method | URI | 예시 | 설명 |
+| --- | --- | --- | --- | --- |
+| getQuery | `get`  | /keyword/query | /keyword/query | 클라이언트에게 질문 키워드 전달 |
+| recommendRegion | `get` | /model/keywords?key={keyword} | /model/keywords?key="바다"&key="힐링"&key="가족"&key="맛집"&key="밥” | 클라이언트가 선택한 키워드를 받아서 여행지 추천 |
+| trainModel | `post`  | /model/params | /model/params | EC2의 추론에서 사용하는 모델 재학습 |
+| getKeywords | `get` | /keyword/{region} | /keyword/전주 | region에 속한 키워드 가져오기 |
+
 ## AWS 설정하기
 
 **로그인 주소**
