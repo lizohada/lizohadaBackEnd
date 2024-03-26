@@ -91,9 +91,4 @@ TextRank 알고리즘을 사용하여 지역별 블로그 글 기반으로 상�
 {
   "region" : "전주"
 }
-
-// recommendRegion Response 형태
-{
-  "region" : "전주"
-}
 ```
