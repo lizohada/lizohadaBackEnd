@@ -2,6 +2,7 @@ from typing import Union
 from fastapi import FastAPI
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
+from KeywordLearning import keyword_learning
 
 app = FastAPI()
 
@@ -35,4 +36,6 @@ def recommend_region():
 
 @app.post("/model/params")
 def train_model():
-    return {}
+    model = keyword_learning.train_model()
+    keyword_learning.save_model_params(model)
+    return {"result" : "complete"}
