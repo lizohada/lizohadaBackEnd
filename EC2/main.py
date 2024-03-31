@@ -1,8 +1,9 @@
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 from KeywordLearning import keyword_learning
+from PreferenceInference import preference_inference
 
 app = FastAPI()
 
@@ -31,8 +32,10 @@ def get_query():
     return {}
 
 @app.get("/model/keywords")
-def recommend_region():
-    return {}
+def recommend_region(keywords: list[str] = Query()):
+    model = preference_inference.load_model()
+    recommended_region = preference_inference.get_recommended_region(model, keywords)
+    return {"result" : recommended_region}
 
 @app.post("/model/params")
 def train_model():

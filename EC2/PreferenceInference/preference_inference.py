@@ -64,8 +64,3 @@ def get_recommended_region(model, user_inputs):
 
     recommended_region = inference(model, user_inputs, keywords_by_region)
     return recommended_region
-
-# 예시
-user_inputs = ["바다", "힐링", "가족", "맛집", "밥"]
-model = load_model()
-print(get_recommended_region(model, user_inputs))
