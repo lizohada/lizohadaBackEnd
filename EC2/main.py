@@ -2,6 +2,7 @@ from typing import Union
 from fastapi import FastAPI
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
+from KeywordLearning import keyword_learning
 
 app = FastAPI()
 
@@ -21,7 +22,20 @@ def read_root():
   print(len(items))
   return {"result": items}
 
-
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
+
+@app.get("/keyword/query")
+def get_query():
+    return {}
+
+@app.get("/model/keywords")
+def recommend_region():
+    return {}
+
+@app.post("/model/params")
+def train_model():
+    model = keyword_learning.train_model()
+    keyword_learning.save_model_params(model)
+    return {"result" : "complete"}
