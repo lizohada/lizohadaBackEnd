@@ -33,7 +33,7 @@ def get_query():
 
 @app.get("/model/keywords")
 def recommend_region(keywords: list[str] = Query()):
-    model = preference_inference.load_gmodel()
+    model = preference_inference.load_model()
     recommended_region = preference_inference.get_recommended_region(model, keywords)
     return {"region" : recommended_region}
 
