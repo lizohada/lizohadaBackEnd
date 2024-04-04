@@ -65,6 +65,3 @@ def save_model_params(model):
     s3.meta.client.upload_file(local_file_path, BUCKET_NAME, s3_object_key)
 
     os.remove(FILE_NAME)
-
-model = train_model()
-save_model_params(model)
