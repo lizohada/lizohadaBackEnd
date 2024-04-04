@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
    - source: /EC2/main.py
-   destination: /var/www/html/
+   destination: /home/ec2-user/codes
    hooks:
    BeforeInstall: - location: scripts/install_dependencies
    timeout: 300
