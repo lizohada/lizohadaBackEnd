@@ -12,6 +12,10 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('keyword_blog_contents') # 스크랩한 블로그 글
 
 @app.get("/")
+def home():
+    return {"result": "items"}
+
+@app.get("/similarities")
 def read_root():
   # keyword가 같은 쿼리와 같은 요소를 전부 가져온다.
   response = table.query(
@@ -39,3 +43,4 @@ def train_model():
     model = keyword_learning.train_model()
     keyword_learning.save_model_params(model)
     return {"result" : "complete"}
+
