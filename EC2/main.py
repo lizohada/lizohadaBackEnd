@@ -31,9 +31,10 @@ def read_item(item_id: int, q: Union[str, None] = None):
 def get_query():
     return {}
 
+model = preference_inference.load_model()
+
 @app.get("/model/keywords")
 def recommend_region(keywords: list[str] = Query()):
-    model = preference_inference.load_model()
     recommended_region = preference_inference.get_recommended_region(model, keywords)
     return {"region" : recommended_region}
 
