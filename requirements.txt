@@ -7,3 +7,6 @@ scipy
 python-dotenv
 word2vec
 konlpy
+APScheduler
+fastapi-utils
+httpx

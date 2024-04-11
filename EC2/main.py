@@ -5,9 +5,12 @@ from boto3.dynamodb.conditions import Key, Attr
 from KeywordLearning import keyword_learning
 from PreferenceInference import preference_inference
 from fastapi_utils.tasks import repeat_every
+from time import time
+import httpx
+import asyncio
 
 app = FastAPI()
-
+URL = "https://cajrew7nkf4u5g3meesfwls2oq0oadma.lambda-url.ap-northeast-2.on.aws/"
 # Get the service resource.
 dynamodb = boto3.resource('dynamodb')
 # 테이블 접속
@@ -50,5 +53,14 @@ def train_model():
 
 @app.on_event("startup")
 @repeat_every(seconds=60)  # 60 hour
-def print_task() -> None:
-    print("주기적인 실행!!")
+async def print_task() -> None:
+    print("수행 시작!")
+    async with httpx.AsyncClient() as client:
+        params = {'keyword': '포항 여행','count':"65"}
+        response = await client.get(URL, params)
+        print(response)
+    if(response.status_code == 200):
+        return {"result" : "수행 완료"}
+    else:
+        return {"result" : "수행 실패"}
+
