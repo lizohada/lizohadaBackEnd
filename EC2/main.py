@@ -4,7 +4,11 @@ import boto3
 from boto3.dynamodb.conditions import Key, Attr
 from KeywordLearning import keyword_learning
 from PreferenceInference import preference_inference
+<<<<<<< HEAD
 import random
+=======
+from fastapi_utils.tasks import repeat_every
+>>>>>>> ef0dda0 (fastapi에 주기적으로 실행시키는 함수 생성)
 
 app = FastAPI()
 
@@ -58,3 +62,7 @@ def train_model():
     keyword_learning.save_model_params(model)
     return {"result" : "complete"}
 
+@app.on_event("startup")
+@repeat_every(seconds=60)  # 60 hour
+def print_task() -> None:
+    print("주기적인 실행!!")
