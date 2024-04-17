@@ -31,10 +31,17 @@ export async function requestRecentPostdate(keyword) {
     Limit: 1, // 가장 큰 값 1개를 추출
   });
 
-  const response = await dynamo.send(command);
-  console.log("응답 아이템 " + response.Items);
-  if (response.Items.length === 0) {
-    return "00000000";
+  try {
+    const response = await dynamo.send(command);
+    console.log("응답 아이템 " + response.Items);
+
+    if (response.Items && response.Items.length > 0) {
+      return response.Items[0].postdate;
+    } else {
+      return "00000000";
+    }
+  } catch (error) {
+    console.error("Error occurred while querying DynamoDB:", error);
+    throw error; // 예외를 다시 throw하여 호출자에게 전파
   }
-  return response.Items.length[0];
 }

@@ -24,6 +24,7 @@ async function blogScraper(keyword, count, recentPostDate) {
           "X-Naver-Client-Secret": client_secret,
         },
       });
+      // console.log(blogsResponse);
       if (blogsResponse.status == 200) {
         // start부터 display 만큼 블로그 아이템을 가져오기
         const data = await blogsResponse.data.items.map(function (item) {
@@ -35,13 +36,16 @@ async function blogScraper(keyword, count, recentPostDate) {
           };
         });
         const initalLength = result.length;
-        // console.log("초기 길이 ", initalLength);
         for (i = 0; i < data.length; i++) {
-          // console.log(result < count);
-          if (result < count && data[i].postdate > recentPostDate) {
+          // console.log(result.length, " ", count);
+          // console.log(data[i].postdate + " " + recentPostDate);
+          if (result.length < count && data[i].postdate >= recentPostDate) {
             result.push(data[i]);
           }
         }
+        // console.log(
+        //   "초기 값 : " + initalLength + " 나중 값 : " + result.length
+        // );
         if (initalLength == result.length) {
           // console.log("더 이상 업데이트하지 않습니다.");
           break;
