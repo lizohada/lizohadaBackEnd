@@ -1,0 +1,21 @@
+{
+  "name": "crawler",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {},
+  "dependencies": {
+    "aws-sdk": "^2.1575.0",
+    "aws-xray-sdk": "^3.5.4",
+    "axios": "^1.6.7",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "iconv-lite": "^0.6.3",
+    "openai": "^4.26.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@aws-sdk/lib-dynamodb": "^3.552.0",
+    "@types/cheerio": "^0.22.35"
+  }
+}
