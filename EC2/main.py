@@ -5,8 +5,11 @@ from boto3.dynamodb.conditions import Key, Attr
 from KeywordLearning import keyword_learning
 from PreferenceInference import preference_inference
 <<<<<<< HEAD
+<<<<<<< HEAD
 import random
 =======
+=======
+>>>>>>> 7702212 (get query api 작성 완료)
 from fastapi_utils.tasks import repeat_every
 <<<<<<< HEAD
 >>>>>>> ef0dda0 (fastapi에 주기적으로 실행시키는 함수 생성)
@@ -14,7 +17,13 @@ from fastapi_utils.tasks import repeat_every
 from time import time
 import httpx
 import asyncio
+<<<<<<< HEAD
 >>>>>>> 8bfae78 (fix/ Fastapi가 람다를 호출하지 못했던 부분 수정)
+=======
+=======
+import random
+>>>>>>> 75f9ff2 (get query api 작성 완료)
+>>>>>>> 7702212 (get query api 작성 완료)
 
 app = FastAPI()
 URL = "https://0iluhpf98l.execute-api.ap-northeast-2.amazonaws.com/Prod/"
