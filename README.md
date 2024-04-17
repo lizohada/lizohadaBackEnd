@@ -38,8 +38,8 @@ aws에서 만든 압축 라이브러리 `npm install aws-xray-sdk --save` 를 �
  `zip -r my_deployment_package.zip . `
 
  `zip -r [압축 파일 이름].zip [index.mjs가 존재하는 위치]`
-
-람다에 넣으면 `index.mjs`를 실행 가능!
+`aws s3 cp --recursive build s3://<<버킷이름>>`로 S3에 zip 파일을 넣고 
+람다를 업데이트하면 `index.mjs`를 실행 가능!
 
 ### EC2를 배포하는 방법
 

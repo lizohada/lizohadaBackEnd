@@ -8,10 +8,16 @@ from PreferenceInference import preference_inference
 import random
 =======
 from fastapi_utils.tasks import repeat_every
+<<<<<<< HEAD
 >>>>>>> ef0dda0 (fastapi에 주기적으로 실행시키는 함수 생성)
+=======
+from time import time
+import httpx
+import asyncio
+>>>>>>> 8bfae78 (fix/ Fastapi가 람다를 호출하지 못했던 부분 수정)
 
 app = FastAPI()
-
+URL = "https://cajrew7nkf4u5g3meesfwls2oq0oadma.lambda-url.ap-northeast-2.on.aws/"
 # Get the service resource.
 dynamodb = boto3.resource('dynamodb')
 # 테이블 접속
@@ -64,5 +70,14 @@ def train_model():
 
 @app.on_event("startup")
 @repeat_every(seconds=60)  # 60 hour
-def print_task() -> None:
-    print("주기적인 실행!!")
+async def print_task() -> None:
+    print("수행 시작!")
+    async with httpx.AsyncClient() as client:
+        params = {'keyword': '포항 여행','count':"65"}
+        response = await client.get(URL, params)
+        print(response)
+    if(response.status_code == 200):
+        return {"result" : "수행 완료"}
+    else:
+        return {"result" : "수행 실패"}
+
