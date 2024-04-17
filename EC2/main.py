@@ -17,7 +17,7 @@ import asyncio
 >>>>>>> 8bfae78 (fix/ Fastapi가 람다를 호출하지 못했던 부분 수정)
 
 app = FastAPI()
-URL = "https://cajrew7nkf4u5g3meesfwls2oq0oadma.lambda-url.ap-northeast-2.on.aws/"
+URL = "https://0iluhpf98l.execute-api.ap-northeast-2.amazonaws.com/Prod/"
 # Get the service resource.
 dynamodb = boto3.resource('dynamodb')
 # 테이블 접속
@@ -73,8 +73,8 @@ def train_model():
 async def print_task() -> None:
     print("수행 시작!")
     async with httpx.AsyncClient() as client:
-        params = {'keyword': '포항 여행','count':"65"}
-        response = await client.get(URL, params)
+        params = {'keyword': '포항 여행','count':"5"}
+        response = await client.post(URL, params)
         print(response)
     if(response.status_code == 200):
         return {"result" : "수행 완료"}
