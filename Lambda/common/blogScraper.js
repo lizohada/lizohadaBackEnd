@@ -1,5 +1,6 @@
 require("dotenv").config();
 const axios = require("axios");
+const { sleep } = require("openai/core.mjs");
 
 var client_id = process.env.NAVER_CLIENT_ID;
 var client_secret = process.env.NAVER_CLIENT_SECRECT;
@@ -39,7 +40,7 @@ async function blogScraper(keyword, count, recentPostDate) {
         for (i = 0; i < data.length; i++) {
           // console.log(result.length, " ", count);
           // console.log(data[i].postdate + " " + recentPostDate);
-          if (result.length < count && data[i].postdate >= recentPostDate) {
+          if (result.length < count && data[i].postdate > recentPostDate) {
             result.push(data[i]);
           }
         }
@@ -52,6 +53,7 @@ async function blogScraper(keyword, count, recentPostDate) {
         }
       }
       start += display;
+      sleep(500);
     }
     // console.log("스크랩 목표 포스팅 개수 : " + result.length);
     return result;
