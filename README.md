@@ -61,6 +61,13 @@ aws에서 만든 압축 라이브러리 `npm install aws-xray-sdk --save` 를 �
 
 ### 블로그 글 스크랩핑 (/Lambda/Blog Scrape) 
 
+```
+curl -X POST \
+  "https://0iluhpf98l.execute-api.ap-northeast-2.amazonaws.com/Prod/?keyword=%EB%B6%80%EC%B2%9C%EC%97%AC%ED%96%89&count=3"
+```
+
+위와 같이 curl을 호출해서 람다함수를 호출할 수 있다. 다만, apigateway가 한글을 인식하지 못해서 UTF-8로 인코딩한 값을 넣어줘야한다.
+
 ### 키워드 추출 (/EC2/Keyword Extraction)
 TextRank 알고리즘을 사용하여 지역별 블로그 글 기반으로 상위 20개 단어를 키워드로 추출
 

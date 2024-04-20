@@ -62,16 +62,16 @@ def train_model():
     keyword_learning.save_model_params(model)
     return {"result" : "complete"}
 
+
+async def perform_task(keyword: str, count: int):
+    url = "https://0iluhpf98l.execute-api.ap-northeast-2.amazonaws.com/Prod/"
+    query_string = f"?keyword={keyword+" 여행"}&count={count}"
+    async with httpx.AsyncClient() as client:
+        await client.post(url + query_string)
+
 @app.on_event("startup")
 @repeat_every(seconds=60)  # 60 hour
 async def print_task() -> None:
     print("수행 시작!")
-    async with httpx.AsyncClient() as client:
-        params = {'keyword': '포항 여행','count':"5"}
-        response = await client.post(URL, params)
-        print(response)
-    if(response.status_code == 200):
-        return {"result" : "수행 완료"}
-    else:
-        return {"result" : "수행 실패"}
+    await perform_task("부천", 5)
 
