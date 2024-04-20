@@ -5,9 +5,13 @@ from boto3.dynamodb.conditions import Key, Attr
 from KeywordLearning import keyword_learning
 from PreferenceInference import preference_inference
 import random
-
+from fastapi_utils.tasks import repeat_every
+from time import time
+import httpx
+import asyncio
+import random
 app = FastAPI()
-
+URL = "https://0iluhpf98l.execute-api.ap-northeast-2.amazonaws.com/Prod/"
 # Get the service resource.
 dynamodb = boto3.resource('dynamodb')
 # 테이블 접속
@@ -57,4 +61,17 @@ def train_model():
     model = keyword_learning.train_model()
     keyword_learning.save_model_params(model)
     return {"result" : "complete"}
+
+
+async def perform_task(keyword: str, count: int):
+    url = "https://0iluhpf98l.execute-api.ap-northeast-2.amazonaws.com/Prod/"
+    query_string = f"?keyword={keyword+" 여행"}&count={count}"
+    async with httpx.AsyncClient() as client:
+        await client.post(url + query_string)
+
+@app.on_event("startup")
+@repeat_every(seconds=60)  # 60 hour
+async def print_task() -> None:
+    print("수행 시작!")
+    await perform_task("부천", 5)
 
