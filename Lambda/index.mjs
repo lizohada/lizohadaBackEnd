@@ -44,12 +44,17 @@ export const handler = async (event, context) => {
     });
     await delay(1000);
   }
-  requestBathWrite(putRequests);
+
+  if (putRequests.length > 0) {
+    requestBathWrite(putRequests);
+  }
   // const filePath = `./results/${body.keyword}.json`;
   // fs.writeFileSync(filePath, JSON.stringify(result, null, 2), "utf-8");
   return {
     statusCode: 200,
-    body: JSON.stringify(body.keyword + " 스크랩핑 끝"),
+    body: JSON.stringify(
+      body.keyword + " 스크랩핑한 포스팅 개수 : " + putRequests.length
+    ),
   };
 };
 

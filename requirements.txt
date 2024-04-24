@@ -10,3 +10,4 @@ konlpy
 APScheduler
 fastapi-utils
 httpx
+tqdm

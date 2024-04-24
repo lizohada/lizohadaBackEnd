@@ -10,13 +10,20 @@ const dynamo = DynamoDBDocumentClient.from(client);
 const tableName = "keyword_blog_contents";
 
 export async function requestBathWrite(putRequests) {
-  // 배치로 DynamoDB에 요소 집어넣기
-  const command = new BatchWriteCommand({
-    RequestItems: {
-      [tableName]: putRequests,
-    },
-  });
-  await dynamo.send(command);
+  try {
+    // 배치로 DynamoDB에 요소 집어넣기
+    const command = new BatchWriteCommand({
+      RequestItems: {
+        [tableName]: putRequests,
+      },
+    });
+    await dynamo.send(command);
+    console.log("Batch write successful");
+  } catch (error) {
+    console.error("Error occurred during batch write:", error);
+    // 여기서 에러를 처리할 수 있습니다. 예를 들어, 에러를 로그에 기록하거나 다른 방식으로 처리할 수 있습니다.
+    throw error; // 에러를 다시 throw하여 상위 호출자에게 전달합니다.
+  }
 }
 
 export async function requestRecentPostdate(keyword) {
