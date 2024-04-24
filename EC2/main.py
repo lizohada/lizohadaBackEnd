@@ -7,8 +7,8 @@ from PreferenceInference import preference_inference
 import random
 from fastapi_utils.tasks import repeat_every
 from time import time
-import httpx
-import asyncio
+import pprint
+import requests
 import random
 app = FastAPI()
 URL = "https://0iluhpf98l.execute-api.ap-northeast-2.amazonaws.com/Prod/"
@@ -65,13 +65,17 @@ def train_model():
 
 async def perform_task(keyword: str, count: int):
     url = "https://0iluhpf98l.execute-api.ap-northeast-2.amazonaws.com/Prod/"
-    query_string = f"?keyword={keyword+" 여행"}&count={count}"
-    async with httpx.AsyncClient() as client:
-        await client.post(url + query_string)
+    query_string = f"?keyword={keyword}&count={count}"
+    print(url+query_string)
+    r_post = requests.post(url+query_string)
+    pprint.pprint(r_post.json())
+
 
 @app.on_event("startup")
-@repeat_every(seconds=60)  # 60 hour
-async def print_task() -> None:
-    print("수행 시작!")
-    await perform_task("부천", 5)
+@repeat_every(seconds=60*60*24)  # 1일 간격으로 작업 진행
+async def lambda_task() -> None:
+    regionList = ["강릉", "동해", "삼척", "속초", "원주", "춘천", "태백", "고성"]
+    for s in regionList:
+        print(s," 여행 블로그 탐색 요청")
+        await perform_task(s+" 여행", 5)
 
